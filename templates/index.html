@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>توقع اشتراك العميل في الوديعة البنكية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            margin: 20px auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e3a8a;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+
+        input,
+        select {
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #f9fafb;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+        }
+
+        button {
+            grid-column: span 2;
+            padding: 14px;
+            background: linear-gradient(90deg, #22c55e, #16a34a);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 20px;
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #16a34a, #15803d);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #result {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: #1e3a8a;
+            font-weight: 700;
+            padding: 15px;
+            background-color: #f0f9ff;
+            border-radius: 8px;
+        }
+
+        .loader {
+            display: none;
+            border: 5px solid #e5e7eb;
+            border-top: 5px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 0.8s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            button {
+                grid-column: span 1;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            input,
+            select {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>توقع اشتراك العميل في الوديعة البنكية</h1>
+        <form id="predictionForm" action="/predict" method="POST">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="age" title="عمر العميل بالسنوات">العمر</label>
+                    <input type="number" id="age" name="age" required min="18" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="job" title="نوع وظيفة العميل">الوظيفة</label>
+                    <select id="job" name="job" required>
+                        <option value="admin.">إداري</option>
+                        <option value="blue-collar">عامل يدوي</option>
+                        <option value="entrepreneur">رائد أعمال</option>
+                        <option value="housemaid">عامل منزلي</option>
+                        <option value="management">إدارة</option>
+                        <option value="retired">متقاعد</option>
+                        <option value="self-employed">عمل حر</option>
+                        <option value="services">خدمات</option>
+                        <option value="student">طالب</option>
+                        <option value="technician">فني</option>
+                        <option value="unemployed">عاطل</option>
+                        <option value="unknown">غير معروف</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="marital" title="الحالة الاجتماعية للعميل">الحالة الاجتماعية</label>
+                    <select id="marital" name="marital" required>
+                        <option value="divorced">مطلق</option>
+                        <option value="married">متزوج</option>
+                        <option value="single">أعزب</option>
+                        <option value="unknown">غير معروف</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="education" title="مستوى تعليم العميل">التعليم</label>
+                    <select id="education" name="education" required>
+                        <option value="basic.4y">تعليم أساسي 4 سنوات</option>
+                        <option value="basic.6y">تعليم أساسي 6 سنوات</option>
+                        <option value="basic.9y">تعليم أساسي 9 سنوات</option>
+                        <option value="high.school">ثانوي</option>
+                        <option value="illiterate">أمي</option>
+                        <option value="professional.course">دورة مهنية</option>
+                        <option value="university.degree">درجة جامعية</option>
+                        <option value="unknown">غير معروف</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="default" title="هل لدى العميل ديون متعثرة؟">ديون متعثرة</label>
+                    <select id="default" name="default" required>
+                        <option value="no">لا</option>
+                        <option value="yes">نعم</option>
+                        <option value="unknown">غير معروف</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="housing" title="هل لدى العميل قرض إسكان؟">قرض إسكان</label>
+                    <select id="housing" name="housing" required>
+                        <option value="no">لا</option>
+                        <option value="yes">نعم</option>
+                        <option value="unknown">غير معروف</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="loan" title="هل لدى العميل قرض شخصي؟">قرض شخصي</label>
+                    <select id="loan" name="loan" required>
+                        <option value="no">لا</option>
+                        <option value="yes">نعم</option>
+                        <option value="unknown">غير معروف</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="contact" title="نوع الاتصال بالعميل">نوع الاتصال</label>
+                    <select id="contact" name="contact" required>
+                        <option value="cellular">هاتف محمول</option>
+                        <option value="telephone">هاتف أرضي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="month" title="آخر شهر تم الاتصال فيه">الشهر</label>
+                    <select id="month" name="month" required>
+                        <option value="mar">مارس</option>
+                        <option value="apr">أبريل</option>
+                        <option value="may">مايو</option>
+                        <option value="jun">يونيو</option>
+                        <option value="jul">يوليو</option>
+                        <option value="aug">أغسطس</option>
+                        <option value="sep">سبتمبر</option>
+                        <option value="oct">أكتوبر</option>
+                        <option value="nov">نوفمبر</option>
+                        <option value="dec">ديسمبر</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="day_of_week" title="آخر يوم تم الاتصال فيه">يوم الأسبوع</label>
+                    <select id="day_of_week" name="day_of_week" required>
+                        <option value="mon">الإثنين</option>
+                        <option value="tue">الثلاثاء</option>
+                        <option value="wed">الأربعاء</option>
+                        <option value="thu">الخميس</option>
+                        <option value="fri">الجمعة</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="duration" title="مدة آخر مكالمة بالثواني">مدة المكالمة (ثواني)</label>
+                    <input type="number" id="duration" name="duration" required min="0">
+                </div>
+                <div class="form-group">
+                    <label for="campaign" title="عدد المكالمات في الحملة">عدد المكالمات</label>
+                    <input type="number" id="campaign" name="campaign" required min="1">
+                </div>
+                <div class="form-group">
+                    <label for="pdays" title="عدد الأيام منذ آخر اتصال (-1 إذا لم يتم الاتصال)">عدد الأيام</label>
+                    <input type="number" id="pdays" name="pdays" required min="-1">
+                </div>
+                <div class="form-group">
+                    <label for="previous" title="عدد الاتصالات السابقة">الاتصالات السابقة</label>
+                    <input type="number" id="previous" name="previous" required min="0">
+                </div>
+                <div class="form-group">
+                    <label for="poutcome" title="نتيجة الحملة السابقة">نتيجة الحملة السابقة</label>
+                    <select id="poutcome" name="poutcome" required>
+                        <option value="failure">فشل</option>
+                        <option value="nonexistent">غير موجود</option>
+                        <option value="success">نجاح</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="emp.var.rate" title="معدل تغير التوظيف">معدل تغير التوظيف</label>
+                    <input type="number" step="any" id="emp.var.rate" name="emp.var.rate" required>
+                </div>
+                <div class="form-group">
+                    <label for="cons.price.idx" title="مؤشر أسعار المستهلك">مؤشر أسعار المستهلك</label>
+                    <input type="number" step="any" id="cons.price.idx" name="cons.price.idx" required>
+                </div>
+                <div class="form-group">
+                    <label for="cons.conf.idx" title="مؤشر ثقة المستهلك">مؤشر ثقة المستهلك</label>
+                    <input type="number" step="any" id="cons.conf.idx" name="cons.conf.idx" required>
+                </div>
+                <div class="form-group">
+                    <label for="euribor3m" title="معدل يوريبور لثلاثة أشهر">معدل يوريبور</label>
+                    <input type="number" step="any" id="euribor3m" name="euribor3m" required>
+                </div>
+                <div class="form-group">
+                    <label for="nr.employed" title="عدد الموظفين">عدد الموظفين</label>
+                    <input type="number" step="any" id="nr.employed" name="nr.employed" required>
+                </div>
+            </div>
+            <button type="submit">عرض النتيجة</button>
+        </form>
+        <div class="loader" id="loader"></div>
+        <div id="result">
+            {% if prediction_text %}
+            <p>{{ prediction_text }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function (e) {
+            const age = parseInt(document.getElementById('age').value);
+            const duration = parseInt(document.getElementById('duration').value);
+            const campaign = parseInt(document.getElementById('campaign').value);
+
+            if (isNaN(age) || age < 18 || age > 100) {
+                e.preventDefault();
+                alert('العمر يجب أن يكون بين 18 و100 سنة');
+                return;
+            }
+            if (isNaN(duration) || duration < 0) {
+                e.preventDefault();
+                alert('مدة المكالمة يجب أن تكون موجبة');
+                return;
+            }
+            if (isNaN(campaign) || campaign < 1) {
+                e.preventDefault();
+                alert('عدد المكالمات يجب أن يكون 1 أو أكثر');
+                return;
+            }
+
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('result').innerHTML = '';
+        });
+    </script>
+</body>
+
+</html>
